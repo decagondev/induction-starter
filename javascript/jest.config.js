@@ -8,5 +8,6 @@ export default {
   coverageDirectory: "coverage",
   coverageReporters: ["text", "json", "html"],
   testTimeout: 10000,
+  transform: {},
 };
 
