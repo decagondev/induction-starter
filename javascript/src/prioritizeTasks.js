@@ -280,9 +280,24 @@ export function prioritizeTasks(tasks) {
       }
       return 0
     })
+    if (ready.length === 0) {
+      // Circular dependency fallback (should not happen here)
+      throw new CircularDependencyError('No tasks can be scheduled—circular dependency detected')
+    }
+
+    // Schedule all ready tasks, in order
+    for (const task of ready) {
+      finalOrder.push(task)
+      scheduled.add(task.id)
+      unscheduled.delete(task.id)
+      // Remove this task from dependencies of all remaining tasks
+      for (const [id, deps] of dependencyLeft) {
+        if (deps.has(task.id)) deps.delete(task.id)
+      }
+    }
   }
 
-  return null; // TODO: Implement the prioritization algorithm
+  return finalOrder;
 }
 
 
