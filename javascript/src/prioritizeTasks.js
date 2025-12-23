@@ -220,7 +220,20 @@ export function prioritizeTasks(tasks) {
     }
   }
 
-  
+  const topoSortedIds = []
+
+  while (queue.length > 0) {
+    // We only do topological sort here; sorting by priority etc is next step
+    const currentId = queue.shift()
+    topoSortedIds.push(currentId)
+
+    for (const dependentId of dependencyMap.get(currentId)) {
+      inDegree.set(dependentId, inDegree.get(dependentId) - 1)
+      if (inDegree.get(dependentId) === 0) {
+        queue.push(dependentId)
+      }
+    }
+  }
 
   
 
