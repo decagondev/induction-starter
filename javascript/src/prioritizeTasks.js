@@ -195,6 +195,12 @@ export function prioritizeTasks(tasks) {
   //
   // Steps to implement:
   // 1. Perform topological sort to handle dependencies
+
+  // Kahn's algorithm for topological sort
+  const inDegree = new Map()
+  const dependencyMap = new Map() // taskId -> Set of dependents (reverse edges)
+
+  
   //    - Tasks with no dependencies come first
   //    - Then tasks whose dependencies are already in the result
   // 2. Within each dependency level, sort by:
