@@ -36,11 +36,14 @@ class InvalidPriorityError extends Error {
 
 /**
  * Parses a deadline from Date object or ISO string to Date object
- * @param {Date | string} deadline - Deadline as Date object or ISO string
- * @returns {Date} Parsed Date object
+ * @param {Date | string | undefined | null} deadline - Deadline as Date object or ISO string
+ * @returns {Date | undefined} Parsed Date object, or undefined if deadline is missing
  * @throws {Error} If date cannot be parsed
  */
 function parseDeadline(deadline) {
+  if (deadline === undefined || deadline === null) {
+    return undefined
+  }
   if (deadline instanceof Date) {
     return deadline
   }
@@ -140,7 +143,7 @@ function normalizeTasks(tasks) {
   for (const task of tasks) {
     normalized.set(task.id, {
       ...task,
-      deadline: parseDeadline(task.deadline),
+      deadline: task.deadline !== undefined ? parseDeadline(task.deadline) : undefined,
     })
   }
 
@@ -239,7 +242,6 @@ export function prioritizeTasks(tasks) {
   const taskMap = new Map(normalizedTasks)
 
   // Prepare dependency tracking for scheduling
-  const scheduled = new Set()
   const unscheduled = new Set(topoSortedIds)
   const dependencyLeft = new Map()
   for (const [id, task] of normalizedTasks) {
@@ -289,7 +291,6 @@ export function prioritizeTasks(tasks) {
     // Schedule all ready tasks, in order
     for (const task of ready) {
       finalOrder.push(task)
-      scheduled.add(task.id)
       unscheduled.delete(task.id)
       // Remove this task from dependencies of all remaining tasks
       for (const [id, deps] of dependencyLeft) {
