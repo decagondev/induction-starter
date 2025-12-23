@@ -235,22 +235,18 @@ export function prioritizeTasks(tasks) {
     }
   }
 
-  
+  // Build a quick task lookup map
+  const taskMap = new Map(normalizedTasks)
 
-  
-  //    - Tasks with no dependencies come first
-  //    - Then tasks whose dependencies are already in the result
-  // 2. Within each dependency level, sort by:
-  //    - Priority (descending: 5 is highest)
-  //    - Deadline (ascending: earlier deadlines first)
-  //    - Estimated hours (ascending: lower effort first)
-  //
-  // Hint: You can use a queue-based approach or recursive DFS for topological sort
-  // Hint: After topological sort, you may need to do a stable sort by priority/deadline/effort
+  // Prepare dependency tracking for scheduling
+  const scheduled = new Set()
+  const unscheduled = new Set(topoSortedIds)
+  const dependencyLeft = new Map()
+  for (const [id, task] of normalizedTasks) {
+    dependencyLeft.set(id, new Set(task.dependencies))
+  }
 
-  // Placeholder: Return tasks as-is (this will fail tests)
-  // Replace this with your implementation
-  return tasks
+  return null; // TODO: Implement the prioritization algorithm
 }
 
 // Export error classes for use in tests
