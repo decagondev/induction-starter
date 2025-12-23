@@ -246,6 +246,21 @@ export function prioritizeTasks(tasks) {
     dependencyLeft.set(id, new Set(task.dependencies))
   }
 
+  
+  const finalOrder = []
+  // Instead of using topoSortedIds order, we prioritize at each step
+  while (unscheduled.size > 0) {
+    // Find all tasks with dependencies already fulfilled
+    const ready = []
+    for (const id of unscheduled) {
+      if (dependencyLeft.get(id).size === 0) {
+        ready.push(taskMap.get(id))
+      }
+    }
+  }
+
+  return finalOrder
+
   return null; // TODO: Implement the prioritization algorithm
 }
 
